@@ -1,0 +1,17 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>art sheet</title>
+<style>body{background:#111;color:#ccc;font:12px system-ui;margin:10px}h2{margin:10px 0 4px}.g{display:flex;flex-wrap:wrap;gap:4px}
+.g img{width:52px;height:52px;border:1px solid #444;border-radius:4px}.b img{width:150px;height:150px;border:1px solid #333;border-radius:50%;background:#0b0906}.b{gap:8px}.b div{text-align:center;width:150px}
+.q2{border-color:#1eff00!important}.q3{border-color:#0070dd!important}.q4{border-color:#a335ee!important}.q5{border-color:#ff8000!important}</style></head>
+<body><h2>Bosses</h2><div class="g b" id="b"></div><h2>Items</h2><div class="g" id="i"></div><h2>Classes</h2><div class="g" id="c"></div>
+<script type="module">
+import { DUNGEONS, ITEMS } from '../src/world';
+import { itemIcon, bossPortrait, classEmblem } from '../src/art';
+import { CLASSES } from '../src/character';
+const b = document.getElementById('b');
+for (const d of DUNGEONS) for (const x of d.bosses) b.insertAdjacentHTML('beforeend', `<div><img src="${bossPortrait(x)}"><br>${x.name.en}<br><small>${x.archetype}</small></div>`);
+const i = document.getElementById('i');
+for (const it of ITEMS.values()) i.insertAdjacentHTML('beforeend', `<img class="q${it.quality}" title="${it.name.en}" src="${itemIcon(it)}">`);
+const c = document.getElementById('c');
+for (const [k, v] of Object.entries(CLASSES)) c.insertAdjacentHTML('beforeend', `<img src="${classEmblem(k, v.color)}">`);
+</script></body></html>

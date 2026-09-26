@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "gameId": "CallTheDropGame",
+  "apiVersion": 1,
+  "defaultLocale": "en",
+  "locales": {
+    "en": {
+      "name": "Call the Drop",
+      "description": "Read a boss's loot table, call which item drops, and wear what you win. Pick more items for safer odds — every bet returns 96%."
+    },
+    "zh": {
+      "name": "猜掉落",
+      "description": "看首领的掉落表，猜这次会掉哪件装备，押中的装备还能穿上。选得越多越稳——每一注的回报率都是 96%。"
+    }
+  },
+  "presentation": {
+    "mode": "full-iframe",
+    "hostPanels": { "openSession": false, "history": false, "status": false }
+  },
+  "capabilities": {
+    "openSession": true,
+    "submitAction": false,
+    "forfeitExpiredSession": false,
+    "cancelStuckRandomness": true,
+    "resize": true
+  }
+}
