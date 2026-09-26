@@ -249,9 +249,13 @@ export function equipAllUpgrades(c: Character): number {
 // ------------------------------------------------------------------ progression
 
 const FIVE = DUNGEONS.filter(d => !d.raid).map(d => d.key);
-const GATES: Record<string, { from: string[]; share: number }> = {
+/**
+ * `share` of the best power the `from` content allows; `above` (if set) is content whose best gear
+ * alone must NOT be enough, so each raid needs gear from the one before it.
+ */
+const GATES: Record<string, { from: string[]; share: number; above?: string[] }> = {
   throne: { from: FIVE, share: 0.55 },
-  maw: { from: [...FIVE, 'throne'], share: 0.55 },
+  maw: { from: [...FIVE, 'throne'], share: 0.55, above: FIVE },
 };
 const gateCache = new Map<string, number>();
 
@@ -260,7 +264,11 @@ export function gatePower(cls: ClassKey, d: Dungeon): number {
   const gate = GATES[d.key];
   if (!gate) return 0;
   const key = `${cls}:${d.key}`;
-  if (!gateCache.has(key)) gateCache.set(key, Math.round((bestPower(cls, gate.from) * gate.share) / 50) * 50);
+  if (!gateCache.has(key)) {
+    let need = bestPower(cls, gate.from) * gate.share;
+    if (gate.above) need = Math.max(need, bestPower(cls, gate.above) * 1.05);
+    gateCache.set(key, Math.round(need / 50) * 50);
+  }
   return gateCache.get(key)!;
 }
 

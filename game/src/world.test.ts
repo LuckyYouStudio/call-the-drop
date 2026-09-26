@@ -40,6 +40,9 @@ describe('world', () => {
       const five = bestPower(cls, DUNGEONS.filter(d => !d.raid).map(d => d.key));
       expect(gatePower(cls, throne)).toBeLessThan(five);
       expect(gatePower(cls, maw)).toBeGreaterThan(gatePower(cls, throne));
+      // Dungeon gear alone must not open the last raid, but dungeon + first raid gear must.
+      expect(gatePower(cls, maw)).toBeGreaterThan(five);
+      expect(gatePower(cls, maw)).toBeLessThan(bestPower(cls, [...DUNGEONS.filter(d => !d.raid).map(d => d.key), 'throne']));
       expect(Math.abs(bestPower(cls, DUNGEONS.map(d => d.key)) - 16200)).toBeLessThan(30);
     }
   });

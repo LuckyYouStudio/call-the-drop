@@ -506,7 +506,7 @@ function renderBet(): void {
       </div>
       <button class="btn btn--big btn--fight" data-fight ${problem || inFlight() ? 'disabled' : ''}>${t('fight')}</button>
     </div>
-    <p class="bet__note ${error ? 'err' : ''}">${esc(error ?? problem ?? t('betNote', { xp: xpFor(active, boss.dungeon) }))}</p>`;
+    <p class="bet__note ${error ? 'err' : ''}">${esc(error ?? problem ?? (xpFor(active, boss.dungeon) ? t('betNote', { xp: xpFor(active, boss.dungeon) }) : t('betNoteMax')))}</p>`;
 }
 
 // ------------------------------------------------------------------ fight + loot window
@@ -580,7 +580,7 @@ function renderFight(): void {
         ${won
           ? `<div class="res res--win">${t('youCalledIt')}<b>+${money(r.payout ?? 0n)}</b><small>${t('inBags', { item: esc(tx(item.name)) })}</small></div>`
           : `<div class="res res--lose">${t('missed')}<small>${t('missedNote', { stake: money(r.wager) })}</small></div>`}
-        <div class="res__xp">${t('xpGain', { xp: lastXp })}</div>
+        ${lastXp ? `<div class="res__xp">${t('xpGain', { xp: lastXp })}</div>` : ''}
         ${notes}
       </div>
       <div class="lootwin__actions">

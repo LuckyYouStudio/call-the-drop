@@ -94,6 +94,7 @@ const S = {
   insufficient: { en: 'Not enough balance', zh: '余额不足' },
   overLimit: { en: 'Above the platform limit of {max}', zh: '超过平台单注上限 {max}' },
   lockedHere: { en: 'Locked — {why}. You can still browse the loot.', zh: '未解锁（{why}），可以先看看掉落表。' },
+  betNoteMax: { en: 'Max level. Every bet returns 96% on average.', zh: '已满级。每一注的期望回报都是 96%。' },
   betNote: { en: 'Each fight gives {xp} XP, whatever you stake. Every bet returns 96% on average.', zh: '每打一次得 {xp} 点经验（与门票无关）。每一注的期望回报都是 96%。' },
   tank: { en: 'Tank', zh: '坦克' },
   healer: { en: 'Healer', zh: '治疗' },
