@@ -77,6 +77,8 @@ let adoptChecked = false;
 
 let createClass: ClassKey = 'warblade';
 let createName = '';
+/** Whether the player typed a name, so a language switch must not replace it. */
+let createNameEdited = false;
 
 const app = document.getElementById('app')!;
 const tooltip = document.getElementById('tooltip')!;
@@ -89,6 +91,7 @@ const link: HostLink = connectHost(next => {
     const hostLang = link.snapshot?.ui.locale?.toLowerCase().startsWith('zh') ? 'zh' : 'en';
     if (link.snapshot && !langChosen() && hostLang !== lang) {
       setLang(hostLang, false);
+      if (!createNameEdited) createName = '';
       render();
     }
     adoptOpenSession();
@@ -921,7 +924,7 @@ app.addEventListener('click', event => {
   if (d.closeBg !== undefined && target !== el) return; // clicks inside the modal body
   if (d.lang !== undefined) {
     setLang(lang === 'zh' ? 'en' : 'zh');
-    createName = '';
+    if (!createNameEdited) createName = '';
     sfx.click();
     return render();
   }
@@ -929,7 +932,7 @@ app.addEventListener('click', event => {
     if (inFlight()) return;
     screen = d.go as Screen;
     if (screen === 'select') { active = null; round = null; persist(); }
-    if (screen === 'create') createName = '';
+    if (screen === 'create') { createName = ''; createNameEdited = false; }
     sfx.click();
     return render();
   }
@@ -952,7 +955,7 @@ app.addEventListener('click', event => {
     return;
   }
   if (d.class) { createClass = d.class as ClassKey; sfx.click(); return renderCreate(); }
-  if (d.reroll !== undefined) { createName = randomName(); return renderCreate(); }
+  if (d.reroll !== undefined) { createName = randomName(); createNameEdited = false; return renderCreate(); }
   if (d.create !== undefined) {
     const name = (document.getElementById('create-name') as HTMLInputElement).value.trim() || randomName();
     const c = newCharacter(name, createClass);
@@ -1088,7 +1091,10 @@ app.addEventListener('input', event => {
     next?.focus();
     if (next && caret !== null) next.setSelectionRange(caret, caret);
   }
-  if (input.id === 'create-name') createName = input.value;
+  if (input.id === 'create-name') {
+    createName = input.value;
+    createNameEdited = true;
+  }
 });
 
 document.addEventListener('keydown', event => {
