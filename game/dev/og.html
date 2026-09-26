@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>og</title>
+<!-- Dev-only: the 1200×630 share image. Screenshot at exactly 1200×630. -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../src/style.css" />
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body { position: relative; background: radial-gradient(ellipse 60% 90% at 78% 40%, rgba(163, 53, 238, 0.28), transparent 65%), radial-gradient(ellipse 50% 70% at 0% 0%, rgba(201, 166, 75, 0.18), transparent 70%), #0c0a07; }
+  .frame { position: absolute; inset: 14px; border: 1px solid rgba(201, 166, 75, 0.45); border-radius: 16px; }
+  .copy { position: absolute; left: 70px; top: 64px; width: 540px; }
+  .copy h1 { margin: 0; font: 900 84px/0.98 'Cinzel', serif; background: linear-gradient(180deg, #fff3b0, #f0b429 50%, #8a5a12); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 0 #2b1a05) drop-shadow(0 0 22px rgba(255, 170, 40, 0.35)); }
+  .copy p { margin: 18px 0 0; font: 700 25px 'Cinzel', serif; color: #efe3c4; }
+  .copy ul { margin: 30px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; font: 22px system-ui; color: #d9cfb6; }
+  .copy li b { color: #ffd100; }
+  .card { position: absolute; right: 60px; top: 70px; width: 470px; padding: 18px; }
+  .card .head { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+  .card .head img { width: 110px; height: 110px; filter: drop-shadow(0 4px 8px #000); }
+  .card h3 { font-size: 28px; }
+  .card small { color: #a3967a; font: 16px system-ui; }
+  .row { display: grid; grid-template-columns: 26px 44px 1fr 70px; gap: 10px; align-items: center; padding: 7px 8px; border-radius: 6px; font: 17px system-ui; }
+  .row.on { background: rgba(255, 209, 0, 0.1); box-shadow: inset 3px 0 0 #ffd100; }
+  .row img { width: 42px; height: 42px; border-radius: 5px; }
+  .row .pays { text-align: right; color: #ffd100; font-weight: 700; }
+  .tick { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #8a6d2e; }
+  .on .tick { background: #d4a017; }
+  .badge2 { position: absolute; right: 60px; bottom: 44px; font: 800 20px system-ui; color: #1a0f00; background: linear-gradient(180deg, #ffe58a, #f0a818); border-radius: 999px; padding: 8px 18px; }
+</style>
+</head>
+<body>
+  <div class="frame"></div>
+  <div class="copy">
+    <h1>Call<br />the Drop</h1>
+    <p>Read the loot table. Call the drop.</p>
+    <ul>
+      <li>⚔ 31 bosses, each with its own loot table</li>
+      <li>🎯 One pick for big odds, several to play safe</li>
+      <li>💰 Every bet returns <b>96%</b> · up to <b>1000×</b></li>
+      <li>🛡 Wear what you win, climb to the raids</li>
+    </ul>
+  </div>
+  <div class="card panel" id="card"></div>
+  <div class="badge2">Provably fair · on-chain VRF</div>
+<script type="module">
+import { DUNGEONS } from '../src/world';
+import { bossPortrait, itemIcon } from '../src/art';
+import { formatMult } from '../src/odds';
+const boss = DUNGEONS.find(d => d.key === 'maw').bosses.at(-1);
+const total = boss.loot.reduce((a, l) => a + l.weight, 0);
+const legend = boss.loot.filter(l => l.item.quality === 5);
+const epics = boss.loot.filter(l => l.item.quality === 4).slice(0, 5 - legend.length);
+const rows = [...epics, ...legend];
+const color = ['', '', '#1eff00', '#0070dd', '#a335ee', '#ff8000'];
+document.getElementById('card').innerHTML = `
+  <div class="head"><img src="${bossPortrait(boss)}"><div><h3>${boss.name.en}</h3><small>${boss.title.en} · ${boss.dungeon.name.en}</small></div></div>
+  ${rows.map((l, i) => `<div class="row${i === rows.length - 1 ? ' on' : ''}"><span class="tick"></span><img src="${itemIcon(l.item)}" style="box-shadow:0 0 0 2px ${color[l.item.quality]}"><span style="color:${color[l.item.quality]}">${l.item.name.en}</span><span class="pays">${formatMult(0.96 * total / l.weight)}</span></div>`).join('')}`;
+document.title = 'ready';
+</script>
+</body>
+</html>
